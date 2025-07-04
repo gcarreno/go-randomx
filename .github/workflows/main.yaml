@@ -1,4 +1,4 @@
-name: go-randomhash
+name: go-randomx
 
 defaults:
   run:
@@ -20,7 +20,7 @@ on:
 jobs:
 
   test:
-    name: Test go-randomhash
+    name: Test go-randomx
     runs-on: ${{ matrix.operating-system }}
 
     strategy:
@@ -72,7 +72,7 @@ jobs:
     - name: Create GitHub release
       uses: softprops/action-gh-release@v2
       with:
-        name: go-randomhash ${{ env.tag }}
+        name: go-randomx ${{ env.tag }}
         body: ${{ steps.git-cliff.outputs.content }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
