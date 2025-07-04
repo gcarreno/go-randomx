@@ -1,8 +1,9 @@
 package randomx
 
 /*
-#cgo LDFLAGS: -lrandomx
-#include <randomx.h>
+#cgo CFLAGS: -IRandomX/src
+#cgo LDFLAGS: -LRandomX/build -lrandomx
+#include "randomx.h"
 #include <stdlib.h>
 */
 import "C"

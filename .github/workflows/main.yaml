@@ -25,7 +25,7 @@ jobs:
 
     strategy:
       matrix:
-        operating-system: [ ubuntu-latest ]
+        operating-system: [ ubuntu-latest, macos-latest ]
       fail-fast: false
 
     steps:
@@ -35,11 +35,14 @@ jobs:
         fetch-depth: 0
         submodules: true
 
-    - name: Install `librandomx-dev` on Linux
+    - name: Install `RandomX` on Linux
       if: ${{ matrix.operating-system == 'ubuntu-latest' }}
       run: |
-        sudo apt update
-        sudo apt install -y librandomx-dev
+        git clone https://github.com/tevador/RandomX.git
+        cd RandomX
+        mkdir build && cd build
+        cmake .. -DCMAKE_BUILD_TYPE=Release
+        make -j$(sysctl -n hw.ncpu)
 
     - name: Install `RandomX` on Darwin
       if: ${{ matrix.operating-system == 'macos-latest' }}
@@ -65,9 +68,6 @@ jobs:
     - name: Run the tests on Darwin
       if: ${{ matrix.operating-system == 'macos-latest' }}
       run: ./run_tests.sh -d ./tests
-      env:
-        CFLAGS: "-IRandomX/src"
-        LDFLAGS: "-LRandomX/build"
 
   release:
     if: contains(github.ref_type, 'tag')
@@ -91,7 +91,7 @@ jobs:
       uses: orhun/git-cliff-action@v4
       with:
         config: cliff.toml
-        args: --latest --strip header
+        args: --latest --strip header --github-repo ${{ github.repository }}
 
     - name: Create GitHub release
       uses: softprops/action-gh-release@v2
