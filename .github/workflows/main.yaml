@@ -25,7 +25,7 @@ jobs:
 
     strategy:
       matrix:
-        operating-system: [ ubuntu-latest, macos-latest ]
+        operating-system: [ ubuntu-latest ]
       fail-fast: false
 
     steps:
@@ -35,14 +35,11 @@ jobs:
         fetch-depth: 0
         submodules: true
 
-    - name: Install `RandomX` on Linux
+    - name: Install `librandomx-dev` on Linux
       if: ${{ matrix.operating-system == 'ubuntu-latest' }}
       run: |
-        git clone https://github.com/tevador/RandomX.git
-        cd RandomX
-        mkdir build && cd build
-        cmake .. -DCMAKE_BUILD_TYPE=Release
-        make -j$(sysctl -n hw.ncpu)
+        sudo apt update
+        sudo apt install -y librandomx-dev
 
     - name: Install `RandomX` on Darwin
       if: ${{ matrix.operating-system == 'macos-latest' }}
@@ -68,6 +65,9 @@ jobs:
     - name: Run the tests on Darwin
       if: ${{ matrix.operating-system == 'macos-latest' }}
       run: ./run_tests.sh -d ./tests
+      env:
+        CFLAGS: "-IRandomX/src"
+        LDFLAGS: "-LRandomX/build -lrandomx"
 
   release:
     if: contains(github.ref_type, 'tag')
