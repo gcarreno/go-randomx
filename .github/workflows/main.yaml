@@ -35,8 +35,8 @@ jobs:
         fetch-depth: 0
         submodules: true
 
-    - name: Install `randomx-dev`
-      run: sudo apt install -y randomx-dev
+    - name: Install `librandomx-dev`
+      run: sudo apt install -y librandomx-dev
 
     - name: Install Go
       uses: actions/setup-go@v5
